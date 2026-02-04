@@ -13,3 +13,7 @@ app=FastAPI(title=os.getenv("APP_NAME","FASTAPI"))
 @app.get("/ping")
 def ping():
     return {"status":"ok","message":"pong"}
+
+@app.get("/name/{name}")
+def hello(name:"str",greeting:"str"="hello"):
+    return {"message":f"{greeting},{name}"}
