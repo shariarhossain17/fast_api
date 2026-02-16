@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, UniqueConstraint, integer
+from sqlalchemy import Column, Integer, String, UniqueConstraint
 
 from .database import Base
 
@@ -7,7 +7,7 @@ class User(Base):
     __tablename__="users"
 
     id = Column (
-        integer,
+        Integer,
         primary_key=True,
         index=True
     )
