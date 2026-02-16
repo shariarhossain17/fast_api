@@ -91,3 +91,19 @@ def update_user(user_id: int, payload: UserUpdate, db: Session = Depends(get_db)
     db.refresh(user)    # Reload from database
 
     return user
+
+
+@app.delete("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_user(user_id: int, db: Session = Depends(get_db)):
+    user = db.get(User, user_id)
+
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    db.delete(user)     # Mark for deletion
+    db.commit()         # Execute deletion
+
+    return None         # 204 responses have no body
