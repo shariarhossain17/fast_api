@@ -23,12 +23,11 @@ engine=create_engine(
 
 #create a session
 
-SessionLocal=sessionmaker(
+SessionLocal = sessionmaker(
     bind=engine,
-    autoflush=False
-    autocommit=False
-    future=True
-
+    autoflush=False,     
+    autocommit=False,    
+    future=True         
 )
 
 
