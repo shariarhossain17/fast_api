@@ -54,3 +54,40 @@ def create_user(payload: UserCreate, db: Session = Depends(get_db)):
     db.refresh(user)
 
     return user
+
+@app.put("/user/{user_id}", response_model=UserOut)
+def update_user(user_id: int, payload: UserUpdate, db: Session = Depends(get_db)):
+    # Get existing user
+    user = db.get(User, user_id)
+
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    # Update email if provided and different
+    if payload.email and payload.email != user.email:
+        # Check if email already taken
+        if db.query(User).filter(User.email == payload.email).first():
+            raise HTTPException(
+                status_code=400,
+                detail="Email already in use"
+            )
+        user.email = payload.email
+
+    # Update username if provided and different
+    if payload.username and payload.username != user.username:
+        # Check if username already taken
+        if db.query(User).filter(User.username == payload.username).first():
+            raise HTTPException(
+                status_code=400,
+                detail="Username already in use"
+            )
+        user.username = payload.username
+
+    db.add(user)        # Mark as modified
+    db.commit()         # Save changes
+    db.refresh(user)    # Reload from database
+
+    return user
